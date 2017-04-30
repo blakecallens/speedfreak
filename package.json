@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "angular": "^1.6.4",
-    "bootstrap": "^4.0.0-alpha.6",
-    "font-awesome": "^4.7.0",
+    "async": "^2.4.0",
+    "lodash": "^4.17.4",
     "nedb": "^1.8.0"
   }
 }

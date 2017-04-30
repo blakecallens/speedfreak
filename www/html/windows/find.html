@@ -3,26 +3,61 @@
   <head>
     <meta charset="utf-8">
     <title>SpeedFreak</title>
-    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../../node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/main.css">
   </head>
   <body ng-controller="FindController">
     <div class="containter-fluid">
-      <div class="row">
+      <div class="row-fluid">
         <div class="col-md-12">
           <div class="form-group">
             <div class="input-group">
-              <input type="text" class="form-control" ng-model="searchText" placeholder="{{i18n('SEARCH_FOR_GAME')}}" ng-model-options="{debounce: 750}" ng-change="search()"></input>
+              <input type="text" class="form-control" ng-model="searchText" placeholder="{{i18n('SEARCH_FOR_GAME')}}" ng-model-options="{debounce: 400}" ng-change="search()"></input>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-secondary" title="{{i18n('SEARCH')}}" ng-click="search()">
-                  <i class="fa fa-search"></i>
+                <button type="button" class="btn btn-primary" title="{{i18n('SEARCH')}}" ng-click="searchText = ''; searchResults = []">
+                  <span class="glyphicon" ng-class="{'glyphicon-search': !searchText.length, 'glyphicon-remove': searchText.length}"></span>
                 </button>
               </span>
             </div>
           </div>
-          <div class="form-group">
-            <div ng-repeat="game in searchResults" ng-bind="game.names.twitch"></div>
+          <div class="form-group short-scroll-view">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th ng-bind="i18n('TITLE')"></th>
+                  <th ng-bind="i18n('YEAR')"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="game in searchResults track by game.id" ng-class="{active: game.active}" style="cursor: pointer" ng-click="selectGame(game)" title="{{category.rules || ''}}">
+                  <td ng-bind="decodeString(game.names.twitch)"></td>
+                  <td ng-bind="game.released"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="form-group short-scroll-view">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th ng-bind="i18n('CATEGORY')"></th>
+                  <th ng-bind="i18n('LINK')"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="category in categoryResults track by category.id" ng-class="{active: category.active}" style="cursor: pointer" ng-click="selectCategory(category)">
+                  <td ng-bind="decodeString(category.name)"></td>
+                  <td>
+                    <a ng-click="openExternalLink(category.weblink);$event.stopPropagation()">
+                      <span class="glyphicon glyphicon-share"></span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="form-group short-scroll-view">
+            <div ng-bind="selectedCategory.rules"></div>
           </div>
         </div>
       </div>
