@@ -1,9 +1,10 @@
 let _ = require('lodash');
+let async = require('async');
 let i18nService = require('../services/i18n');
 
 angular.module('speedfreak.app', [])
 .controller('FindController', ($scope, $http, $filter) => {
-  var apiUrl = 'https://www.speedrun.com/api/v1';
+  let apiUrl = 'https://www.speedrun.com/api/v1';
 
   $scope.i18n = i18nService.getLocalizedString;
 
@@ -19,7 +20,9 @@ angular.module('speedfreak.app', [])
       }
     }).then(result => {
       $scope.searchResults = result.data.data;
-      console.log($scope.searchResults);
+      $scope.selectedGame = null;
+      $scope.categoryResults = null;
+      $scope.selectedCategory = null;
     });
   };
 
@@ -35,7 +38,7 @@ angular.module('speedfreak.app', [])
   $scope.getCategorysForGame = game => {
     $http.get(apiUrl + '/games/' + game.id + '/categories').then(result => {
       $scope.categoryResults = result.data.data;
-      console.log($scope.categoryResults);
+      $scope.selectedCategory = null;
     });
   };
 
@@ -53,10 +56,31 @@ angular.module('speedfreak.app', [])
     var link = _.find(category.links, {rel: 'records'});
 
     $http.get(link.uri).then(result => {
-      $scope.categoryRecords = result.data.data;
+      let records = result.data.data[0].runs;
+      $scope.categoryRecords = [];
+
+      for(record of records) {
+        if(record.place > 3) {
+          continue
+        }
+
+        var placeNames = ['1st', '2nd', '3rd'];
+
+        $scope.categoryRecords.push({
+          place: record.place,
+          time: record.run.times.realtime_t,
+          icon: $scope.selectedGame.assets['trophy-' + placeNames[record.place - 1]].uri
+        });
+      }
+
+      $scope.categoryRecords = $filter('orderBy')($scope.categoryRecords, '+place');
       console.log($scope.categoryRecords);
     });
   }
+
+  $scope.getGameCategoryName = () => {
+    return `${$scope.decodeString($scope.selectedGame.names.twitch)} | ${$scope.decodeString($scope.selectedCategory.name)}`;
+  };
 
   $scope.decodeString = string => {
     try {

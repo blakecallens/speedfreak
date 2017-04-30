@@ -1,9 +1,5 @@
 html {
-  margin: 0;
-}
-
-.col-md-12 {
-  padding: .5rem;
+  margin-top: 1rem;
 }
 
 .short-scroll-view {
@@ -11,6 +7,6 @@ html {
   overflow: auto;
 }
 
-.form-group {
-  margin-bottom: .5rem;
+.table.disabled {
+  opacity: 0.25;
 }

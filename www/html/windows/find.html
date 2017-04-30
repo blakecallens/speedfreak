@@ -2,14 +2,14 @@
 <html ng-app="speedfreak.app">
   <head>
     <meta charset="utf-8">
-    <title>SpeedFreak</title>
+    <title>SpeedFreak | Game Search</title>
     <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/main.css">
   </head>
   <body ng-controller="FindController">
     <div class="containter-fluid">
       <div class="row-fluid">
-        <div class="col-md-12">
+        <div class="col-sm-12">
           <div class="form-group">
             <div class="input-group">
               <input type="text" class="form-control" ng-model="searchText" placeholder="{{i18n('SEARCH_FOR_GAME')}}" ng-model-options="{debounce: 400}" ng-change="search()"></input>
@@ -20,24 +20,28 @@
               </span>
             </div>
           </div>
+        </div>
+        <div class="col-sm-6">
           <div class="form-group short-scroll-view">
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th ng-bind="i18n('TITLE')"></th>
+                  <th ng-bind="i18n('GAME')"></th>
                   <th ng-bind="i18n('YEAR')"></th>
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="game in searchResults track by game.id" ng-class="{active: game.active}" style="cursor: pointer" ng-click="selectGame(game)" title="{{category.rules || ''}}">
+                <tr ng-repeat="game in searchResults track by game.id" ng-class="{active: game.active}" style="cursor: pointer" ng-click="selectGame(game)">
                   <td ng-bind="decodeString(game.names.twitch)"></td>
                   <td ng-bind="game.released"></td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </div>
+        <div class="col-sm-6">
           <div class="form-group short-scroll-view">
-            <table class="table table-hover">
+            <table class="table table-hover" ng-class="{disabled: !categoryResults}">
               <thead>
                 <tr>
                   <th ng-bind="i18n('CATEGORY')"></th>
@@ -56,8 +60,27 @@
               </tbody>
             </table>
           </div>
+        </div>
+        <div class="col-sm-12">
           <div class="form-group short-scroll-view">
-            <div ng-bind="selectedCategory.rules"></div>
+            <div>
+              <span ng-repeat="record in categoryRecords">
+                <img ng-src="{{record.icon}}"></img>
+                <span ng-bind="record.time"></span>
+              </span>
+            </div>
+            <div ng-if="selectedCategory.rules">
+              <p>
+                <b ng-bind="i18n('RULES') + ':'"></b>
+              </p>
+              <p ng-bind="selectedCategory.rules"></p>
+            </div>
+            <div class="form-group" ng-if="selectedCategory && !selectedCategory.rules">
+              <p ng-bind="i18n('NO_CATEGORY_RULES')"></p>
+            </div>
+            <div>
+              <button type="button" class="btn btn-block btn-primary" ng-if="selectedCategory" ng-bind="i18n('CONFIGURE') + ' -> ' + getGameCategoryName()" ng-click="createSplits()"></button>
+            </div>
           </div>
         </div>
       </div>
