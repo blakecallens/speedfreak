@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html ng-app="speedfreak.app">
+  <head>
+    <meta charset="utf-8">
+    <title>SpeedFreak</title>
+  </head>
+  <body style="background: #000000;color:white;-webkit-app-region: drag" ng-controller="MainController">
+    <div ng-bind="currentTime.toFixed(2)"></div>
+    <div ng-repeat="split in getSplits()">
+      <div ng-bind="split.toFixed(2)"></div>
+    </div>
+    <script type="text/javascript" src="../../node_modules/angular/angular.min.js"></script>
+    <script>require('../js/app.js');</script>
+
+  </body>
+</html>

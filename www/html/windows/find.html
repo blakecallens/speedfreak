@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="speedfreak.app">
+  <head>
+    <meta charset="utf-8">
+    <title>SpeedFreak</title>
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+  </head>
+  <body ng-controller="FindController">
+    <div class="containter-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="searchText" placeholder="{{i18n('SEARCH_FOR_GAME')}}" ng-model-options="{debounce: 750}" ng-change="search()"></input>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-secondary" title="{{i18n('SEARCH')}}" ng-click="search()">
+                  <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div ng-repeat="game in searchResults" ng-bind="game.names.twitch"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="../../../node_modules/angular/angular.min.js"></script>
+    <script>require('../../js/windows/find.js');</script>
+  </body>
+</html>
